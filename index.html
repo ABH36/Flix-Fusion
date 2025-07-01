@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flixora | Premium Entertainment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: #fff;
+            position: relative;
+        }
+
+        body.light-mode {
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe, #dbeafe);
+            color: #333;
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar.scrolled {
+            padding: 15px 5%;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        body.light-mode .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        body.light-mode .logo {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 30px;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            margin-right: 10px;
+        }
+
+        .search-box input {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px 10px 40px;
+            color: white;
+            width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .search-box input {
+            background: rgba(0, 0, 0, 0.05);
+            color: #333;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            width: 250px;
+        }
+
+        body.light-mode .search-box input:focus {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00dbde;
+        }
+
+        body.light-mode .search-box i {
+            color: #4f46e5;
+        }
+
+        .user-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        body.light-mode .user-profile {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.light-mode .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 90%;
+            max-width: 1200px;
+            margin: 150px auto 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Flip Card Container */
+        .flip-card-container {
+            perspective: 1500px;
+            width: 380px;
+            height: 580px;
+            position: relative;
+            margin: 40px 0;
+        }
+
+        .flip-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            padding: 40px 30px;
+            overflow: hidden;
+        }
+
+        body.light-mode .flip-card-front,
+        body.light-mode .flip-card-back {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        .card-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        body.light-mode .card-title {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            border-radius: 3px;
+        }
+
+        body.light-mode .card-title::after {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00dbde;
+            font-size: 1.2rem;
+        }
+
+        body.light-mode .input-group i {
+            color: #4f46e5;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .input-group input {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: #333;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #fc00ff;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 15px rgba(252, 0, 255, 0.3);
+        }
+
+        body.light-mode .input-group input:focus {
+            border-color: #ec4899;
+            background: rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.2);
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember input {
+            margin-right: 8px;
+            accent-color: #fc00ff;
+        }
+
+        body.light-mode .remember input {
+            accent-color: #ec4899;
+        }
+
+        .forgot-password {
+            color: #00dbde;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .forgot-password {
+            color: #4f46e5;
+        }
+
+        .forgot-password:hover {
+            color: #fc00ff;
+            text-decoration: underline;
+        }
+
+        body.light-mode .forgot-password:hover {
+            color: #ec4899;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light-mode .btn {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-mode .btn:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .social-login {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .social-login p {
+            margin-bottom: 15px;
+            position: relative;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        body.light-mode .social-login p {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .social-login p::before, .social-login p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.light-mode .social-login p::before, 
+        body.light-mode .social-login p::after {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .social-icons a {
+            background: rgba(0, 0, 0, 0.05);
+            color: #333;
+        }
+
+        .social-icons a:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        body.light-mode .social-icons a:hover {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        .switch-link a {
+            color: #00dbde;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        body.light-mode .switch-link a {
+            color: #4f46e5;
+        }
+
+        .switch-link a:hover {
+            color: #fc00ff;
+            text-decoration: underline;
+        }
+
+        body.light-mode .switch-link a:hover {
+            color: #ec4899;
+        }
+
+        /* Features Section */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+            max-width: 1000px;
+        }
+
+        .feature {
+            text-align: center;
+            width: 200px;
+            padding: 25px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            transition: all 0.4s ease;
+        }
+
+        body.light-mode .feature {
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-mode .feature:hover {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light-mode .feature i {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .feature p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        body.light-mode .feature p {
+            color: #4b5563;
+        }
+
+        /* Login Process Modal */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .login-modal {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .login-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 400px;
+            max-width: 90%;
+            text-align: center;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.5s ease;
+        }
+
+        body.light-mode .modal-content {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .modal-content.active {
+            transform: translateY(0);
+        }
+
+        .modal-content h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light-mode .modal-content h3 {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        body.light-mode .progress-container {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        body.light-mode .progress-bar {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+        }
+
+        .status-message {
+            margin: 20px 0;
+            font-size: 16px;
+            color: #00dbde;
+        }
+
+        body.light-mode .status-message {
+            color: #4f46e5;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        body.light-mode footer {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .contact-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light-mode .contact-title {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: #fff;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .social-links a {
+            color: #333;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px);
+            color: #00dbde;
+        }
+
+        body.light-mode .social-links a:hover {
+            color: #4f46e5;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        body.light-mode .copyright {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .navbar {
+                padding: 15px 5%;
+            }
+            
+            .search-box input {
+                width: 150px;
+            }
+            
+            .search-box input:focus {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin-top: 120px;
+            }
+            
+            .flip-card-container {
+                width: 100%;
+                max-width: 380px;
+                height: auto;
+                min-height: 580px;
+            }
+            
+            .features {
+                gap: 20px;
+            }
+            
+            .feature {
+                width: 160px;
+                padding: 20px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 22px;
+            }
+            
+            .search-box input {
+                width: 120px;
+                padding: 8px 15px 8px 35px;
+            }
+            
+            .search-box input:focus {
+                width: 150px;
+            }
+            
+            .search-box i {
+                left: 12px;
+            }
+            
+            .user-profile, .theme-toggle {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+            
+            .flip-card-front,
+            .flip-card-back {
+                padding: 30px 20px;
+            }
+            
+            .options {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .feature {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .social-links {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-play-circle"></i>
+            <span>Flixora</span>
+        </div>
+        
+        <div class="nav-actions">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="user-profile">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <div class="flip-card-container">
+            <div class="flip-card" id="flipCard">
+                <!-- Login Card Front -->
+                <div class="flip-card-front">
+                    <h2 class="card-title">Login to Flixora</h2>
+                    <form>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" placeholder="Username or Email" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="Password" required>
+                        </div>
+                        <div class="options">
+                            <div class="remember">
+                                <input type="checkbox" id="remember">
+                                <label for="remember">Remember me</label>
+                            </div>
+                            <a href="#" class="forgot-password">Forgot Password?</a>
+                        </div>
+                        <button class="btn">LOGIN</button>
+                    </form>
+                    
+                    <div class="social-login">
+                        <p>Or login with</p>
+                        <div class="social-icons">
+                            <a href="#" class="social-btn" data-provider="google">
+                                <i class="fab fa-google"></i>
+                            </a>
+                            <a href="#" class="social-btn" data-provider="apple">
+                                <i class="fab fa-apple"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="switch-link">
+                        <p>Don't have an account? <a id="switch-to-signup">Sign Up</a></p>
+                    </div>
+                </div>
+                
+                <!-- Signup Card Back -->
+                <div class="flip-card-back">
+                    <h2 class="card-title">Create Account</h2>
+                    <form>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" placeholder="Full Name" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" placeholder="Email Address" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="Password" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="Confirm Password" required>
+                        </div>
+                        <button class="btn">CREATE ACCOUNT</button>
+                    </form>
+                    
+                    <div class="switch-link">
+                        <p>Already have an account? <a id="switch-to-login">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Military-Grade Security</h3>
+                <p>256-bit encryption protects your data</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-bolt"></i>
+                <h3>Lightning Fast</h3>
+                <p>Optimized for instant access</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-sync-alt"></i>
+                <h3>Sync Across Devices</h3>
+                <p>Access anywhere, anytime</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-headset"></i>
+                <h3>24/7 Premium Support</h3>
+                <p>Dedicated assistance team</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Login Process Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-content" id="modalContent">
+            <h3 id="loginTitle">Logging in with Google</h3>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <p class="status-message" id="statusMessage">Connecting to Google...</p>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3 class="contact-title">Connect With Us</h3>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Flixora Premium Entertainment. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particle background
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 100, density: { enable: true, value_area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
+                opacity: { value: 0.3, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
+                size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.1, sync: false } },
+                line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.2, width: 1 },
+                move: { enable: true, speed: 1, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
+                modes: { grab: { distance: 140, line_linked: { opacity: 1 } }, push: { particles_nb: 4 } }
+            },
+            retina_detect: true
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Card flip functionality
+        document.getElementById('switch-to-signup').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('flipCard').classList.add('flipped');
+        });
+
+        document.getElementById('switch-to-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('flipCard').classList.remove('flipped');
+        });
+
+        // Social login process simulation
+        document.querySelectorAll('.social-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const provider = this.getAttribute('data-provider');
+                const modal = document.getElementById('loginModal');
+                const modalContent = document.getElementById('modalContent');
+                const progressBar = document.getElementById('progressBar');
+                const statusMessage = document.getElementById('statusMessage');
+                const loginTitle = document.getElementById('loginTitle');
+                
+                loginTitle.textContent = `Logging in with ${provider.charAt(0).toUpperCase() + provider.slice(1)}`;
+                modal.classList.add('active');
+                setTimeout(() => {
+                    modalContent.classList.add('active');
+                }, 100);
+                
+                // Simulate login process
+                setTimeout(() => {
+                    progressBar.style.width = '30%';
+                    statusMessage.textContent = "Authenticating credentials...";
+                }, 800);
+                
+                setTimeout(() => {
+                    progressBar.style.width = '60%';
+                    statusMessage.textContent = "Loading user preferences...";
+                }, 1600);
+                
+                setTimeout(() => {
+                    progressBar.style.width = '90%';
+                    statusMessage.textContent = "Finalizing login...";
+                }, 2400);
+                
+                setTimeout(() => {
+                    progressBar.style.width = '100%';
+                    statusMessage.textContent = "Login successful! Redirecting...";
+                    
+                    // Close modal after successful login simulation
+                    setTimeout(() => {
+                        modal.classList.remove('active');
+                        modalContent.classList.remove('active');
+                        progressBar.style.width = '0%';
+                        statusMessage.textContent = "Connecting...";
+                        
+                        // Show welcome message
+                        alert(`Welcome to Flixora! You've successfully logged in with ${provider}.`);
+                    }, 1000);
+                }, 3200);
+            });
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            
+            if (document.body.classList.contains('light-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Add hover effect to input groups
+        document.querySelectorAll('.input-group input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Button ripple effect
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                let x = e.clientX - e.target.offsetLeft;
+                let y = e.clientY - e.target.offsetTop;
+                
+                let ripple = document.createElement('span');
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    </script>
+</body>
+</html>
